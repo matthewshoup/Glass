@@ -5,7 +5,8 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - run: ./scripts/build-macos.sh
+      - name: Build Glass VST3 AU and Standalone
+        run: bash ./scripts/build-macos.sh
       - uses: actions/upload-artifact@v4
         with:
           name: Glass-macOS-universal

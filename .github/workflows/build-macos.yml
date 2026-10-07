@@ -1,0 +1,12 @@
+name: macOS Universal Build
+on: [workflow_dispatch, push]
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/build-macos.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Glass-macOS-universal
+          path: build/Glass_artefacts/Release/

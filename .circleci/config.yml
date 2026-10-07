@@ -1,0 +1,38 @@
+version: 2.1
+
+jobs:
+  build-glass:
+    macos:
+      xcode: 16.4.0
+    resource_class: m4pro.medium
+    steps:
+      - checkout
+      - run:
+          name: Toolchain info
+          command: |
+            xcodebuild -version
+            cmake --version
+      - run:
+          name: Configure Glass
+          command: |
+            cmake -S . -B build -G Xcode -DCMAKE_BUILD_TYPE=Release
+      - run:
+          name: Build Glass VST3 AU and Standalone
+          command: |
+            cmake --build build --config Release --target Glass_VST3 Glass_AU Glass_Standalone
+      - run:
+          name: Package Glass
+          command: |
+            cd build/Glass_artefacts/Release
+            ditto -c -k --sequesterRsrc --keepParent . ../../../../Glass-macOS-universal.zip
+      - store_artifacts:
+          path: Glass-macOS-universal.zip
+          destination: Glass-macOS-universal.zip
+      - store_artifacts:
+          path: build/Glass_artefacts/Release
+          destination: Glass
+
+workflows:
+  glass-macos:
+    jobs:
+      - build-glass
